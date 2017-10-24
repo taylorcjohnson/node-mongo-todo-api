@@ -34,6 +34,7 @@ const UserSchema = new mongoose.Schema({
   ]
 })
 
+// Instance methods on the methods property
 UserSchema.methods.toJSON = function() {
   let user = this
   let userObject = user.toObject()
@@ -52,6 +53,24 @@ UserSchema.methods.generateAuthToken = function() {
 
   return user.save().then(() => {
     return token
+  })
+}
+
+// Model methods on the statics property
+UserSchema.statics.findByToken = function(token) {
+  let User = this
+  let decoded
+
+  try {
+    decoded = jwt.verify(token, 'abc123')
+  } catch (e) {
+    return Promise.reject()
+  }
+
+  return User.findOne({
+    _id: decoded._id,
+    'tokens.token': token,
+    'tokens.access': 'auth'
   })
 }
 
