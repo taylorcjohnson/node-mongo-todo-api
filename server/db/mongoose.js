@@ -1,5 +1,4 @@
 let mongoose = require('mongoose')
-let db = require('./dbConfig.js')
 
 mongoose.Promise = global.Promise
 
